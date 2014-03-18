@@ -1,0 +1,67 @@
+#!/usr/bin/env node
+
+var through = require('through2');
+var parser = require('tap-parser');
+var duplexer = require('duplexer');
+var chalk = require('chalk');
+var out = through();
+var tap = parser();
+var dup = duplexer(tap, out);
+var currentTestName = '';
+var errors = [];
+var lastComment;
+
+out.push('\n');
+
+tap.on('comment', function (comment) {
+  lastComment = comment;
+});
+
+tap.on('assert', function (res) {
+  var color = (res.ok) ? 'green' : 'red';
+  
+  if (!res.ok) errors.push(lastComment + ' ' + chalk.red(res.name));
+  if (res.ok) out.push(chalk[color]('.'));
+  if (!res.ok) out.push(chalk[color]('\nx'));
+});
+
+tap.on('extra', function (extra) {
+  if (extra !== '') out.push('   ' + extra + '\n');
+});
+
+tap.on('results', function (res) {
+  
+  out.push('\n\n')
+  out.push(res.asserts.length + ' tests\n');
+  out.push(chalk.green(res.pass.length + ' passed\n'));
+  
+  if (res.fail.length) out.push(chalk.red(res.fail.length + ' failed'));
+  
+  if (errors.length) {
+    var past = (errors.length == 1) ? 'was' : 'were';
+    var plural = (errors.length == 1) ? 'failure' : 'failures';
+    
+    out.push('\n');
+    out.push(chalk.red('\nFailed Tests: '));
+    out.push('There ' + past + ' ' + chalk.red(errors.length) + ' ' + plural + '\n\n');
+    
+    errors.forEach(function (error) {
+      out.push('  ' + chalk.red('x') + ' ' + error + '\n');
+    });
+    
+    out.push('\n');
+  }
+  else{
+    out.push(chalk.green('\nPass!') + '\n');
+  }
+});
+
+process.stdin
+  .pipe(dup)
+  .pipe(process.stdout);
+  
+process.on('exit', function () {
+  if (errors.length) {
+    process.exit(1);
+  }
+});
