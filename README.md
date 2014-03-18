@@ -2,7 +2,7 @@
 
 Formatted TAP output with dots ...
 
-![Output screenshot](https://i.cloudup.com/RbBSkxp2Ag.png)
+![Output screenshot](https://i.cloudup.com/RbBSkxp2Ag.png =442px)
  
 ## Install
  
