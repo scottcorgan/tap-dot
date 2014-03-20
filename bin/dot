@@ -13,46 +13,62 @@ var lastComment;
 
 out.push('\n');
 
+function outPush (str) {
+  out.push('  ' + str);
+};
+
 tap.on('comment', function (comment) {
   lastComment = comment;
 });
+
+var firstTestDone = false;
 
 tap.on('assert', function (res) {
   var color = (res.ok) ? 'green' : 'red';
   
   if (!res.ok) errors.push(lastComment + ' ' + chalk.red(res.name));
-  if (res.ok) out.push(chalk[color]('.'));
-  if (!res.ok) out.push(chalk[color]('\nx'));
+  if (res.ok) {
+    (firstTestDone)
+      ? out.push(chalk[color]('.'))
+      : outPush(chalk[color]('.'));
+      
+    firstTestDone = true;
+  }
+  if (!res.ok) {
+    outPush('\n')
+    outPush(chalk[color]('x'));
+  }
 });
 
 tap.on('extra', function (extra) {
-  if (extra !== '') out.push('   ' + extra + '\n');
+  if (extra !== '') outPush('   ' + extra + '\n');
 });
 
 tap.on('results', function (res) {
   
-  out.push('\n\n')
-  out.push(res.asserts.length + ' tests\n');
-  out.push(chalk.green(res.pass.length + ' passed\n'));
+  outPush('\n\n')
+  outPush(res.asserts.length + ' tests\n');
+  outPush(chalk.green(res.pass.length + ' passed\n'));
   
-  if (res.fail.length) out.push(chalk.red(res.fail.length + ' failed'));
+  if (res.fail.length) outPush(chalk.red(res.fail.length + ' failed'));
   
   if (errors.length) {
     var past = (errors.length == 1) ? 'was' : 'were';
     var plural = (errors.length == 1) ? 'failure' : 'failures';
     
-    out.push('\n');
-    out.push(chalk.red('\nFailed Tests: '));
-    out.push('There ' + past + ' ' + chalk.red(errors.length) + ' ' + plural + '\n\n');
+    outPush('\n\n');
+    outPush(chalk.red('Failed Tests: '));
+    outPush('There ' + past + ' ' + chalk.red(errors.length) + ' ' + plural + '\n\n');
     
     errors.forEach(function (error) {
-      out.push('  ' + chalk.red('x') + ' ' + error + '\n');
+      outPush('  ' + chalk.red('x') + ' ' + error + '\n');
     });
     
-    out.push('\n');
+    outPush('\n');
   }
   else{
-    out.push(chalk.green('\nPass!') + '\n');
+    outPush('\n');
+    outPush(chalk.green('Pass!') + '\n');
   }
 });
 
