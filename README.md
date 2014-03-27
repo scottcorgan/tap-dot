@@ -2,7 +2,13 @@
 
 Formatted TAP output with dots ...
 
-![Output screenshot](https://i.cloudup.com/OHkehx65CQ.png)
+**Passed**
+
+![Passed tests](https://i.cloudup.com/NUrIyLYHct.png)
+
+**Failed tests**
+
+![Failed tests](https://i.cloudup.com/70SmvILs9I.png)
  
 ## Install
  

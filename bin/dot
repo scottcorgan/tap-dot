@@ -9,6 +9,7 @@ var tap = parser();
 var dup = duplexer(tap, out);
 var currentTestName = '';
 var errors = [];
+var extra = [];
 var lastComment;
 
 out.push('\n');
@@ -26,7 +27,7 @@ var firstTestDone = false;
 tap.on('assert', function (res) {
   var color = (res.ok) ? 'green' : 'red';
   
-  if (!res.ok) errors.push(lastComment + ' ' + chalk.red(res.name));
+  // if (!res.ok) errors.push(lastComment + ' ' + chalk.red(res.name));
   if (res.ok) {
     (firstTestDone)
       ? out.push(chalk[color]('.'))
@@ -35,24 +36,28 @@ tap.on('assert', function (res) {
     firstTestDone = true;
   }
   if (!res.ok) {
-    outPush('\n')
-    outPush(chalk[color]('x'));
+    out.push(chalk[color]('x'));
   }
 });
 
-tap.on('extra', function (extra) {
-  if (extra !== '') outPush('   ' + extra + '\n');
+tap.on('extra', function (str) {
+  if (str !== '') extra.push(str);
 });
 
 tap.on('results', function (res) {
+  if (res.fail.length) {
+    outPush('\n\n\n')
+    outputExtra();
+  }
   
   outPush('\n\n')
   outPush(res.asserts.length + ' tests\n');
   outPush(chalk.green(res.pass.length + ' passed\n'));
   
-  if (res.fail.length) outPush(chalk.red(res.fail.length + ' failed'));
   
-  if (errors.length) {
+  if (res.fail.length) {
+    outPush(chalk.red(res.fail.length + ' failed'));
+    
     var past = (errors.length == 1) ? 'was' : 'were';
     var plural = (errors.length == 1) ? 'failure' : 'failures';
     
@@ -60,8 +65,8 @@ tap.on('results', function (res) {
     outPush(chalk.red('Failed Tests: '));
     outPush('There ' + past + ' ' + chalk.red(errors.length) + ' ' + plural + '\n\n');
     
-    errors.forEach(function (error) {
-      outPush('  ' + chalk.red('x') + ' ' + error + '\n');
+    res.fail.forEach(function (error) {
+      outPush('  ' + chalk.red('x') + ' ' + error.name + '\n');
     });
     
     outPush('\n');
@@ -71,6 +76,10 @@ tap.on('results', function (res) {
     outPush(chalk.green('Pass!') + '\n');
   }
 });
+
+function outputExtra () {
+  console.log(extra.join('\n'));
+}
 
 process.stdin
   .pipe(dup)
