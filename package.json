@@ -1,6 +1,6 @@
 {
   "name": "tap-dot",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Formatted TAP output with dots ...",
   "main": "index.js",
   "scripts": {
