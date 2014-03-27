@@ -2,7 +2,7 @@
 
 Formatted TAP output with dots ...
 
-**Passed**
+**Passed tests**
 
 ![Passed tests](https://i.cloudup.com/NUrIyLYHct.png)
 
