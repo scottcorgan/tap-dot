@@ -46,7 +46,8 @@ tap.on('extra', function (str) {
 
 tap.on('results', function (res) {
   if (res.fail.length) {
-    outPush('\n\n\n')
+    errors = res.fail;
+    outPush('\n\n\n');
     outputExtra();
   }
   
@@ -58,12 +59,12 @@ tap.on('results', function (res) {
   if (res.fail.length) {
     outPush(chalk.red(res.fail.length + ' failed'));
     
-    var past = (errors.length == 1) ? 'was' : 'were';
-    var plural = (errors.length == 1) ? 'failure' : 'failures';
+    var past = (res.fail.length == 1) ? 'was' : 'were';
+    var plural = (res.fail.length == 1) ? 'failure' : 'failures';
     
     outPush('\n\n');
     outPush(chalk.red('Failed Tests: '));
-    outPush('There ' + past + ' ' + chalk.red(errors.length) + ' ' + plural + '\n\n');
+    outPush('There ' + past + ' ' + chalk.red(res.fail.length) + ' ' + plural + '\n\n');
     
     res.fail.forEach(function (error) {
       outPush('  ' + chalk.red('x') + ' ' + error.name + '\n');
