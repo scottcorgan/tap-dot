@@ -10,24 +10,29 @@ var dup = duplexer(tap, out);
 var currentTestName = '';
 var errors = [];
 var extra = [];
+var assertCount = 0;
 var lastComment;
 
 out.push('\n');
 
 function outPush (str) {
+  
   out.push('  ' + str);
 };
 
 tap.on('comment', function (comment) {
+  
   lastComment = comment;
 });
 
 var firstTestDone = false;
 
 tap.on('assert', function (res) {
+  
   var color = (res.ok) ? 'green' : 'red';
   
-  // if (!res.ok) errors.push(lastComment + ' ' + chalk.red(res.name));
+  assertCount +=1;
+  
   if (res.ok) {
     (firstTestDone)
       ? out.push(chalk[color]('.'))
@@ -41,22 +46,29 @@ tap.on('assert', function (res) {
 });
 
 tap.on('extra', function (str) {
+  
   if (str !== '') extra.push(str);
 });
 
 tap.on('results', function (res) {
+  
   if (res.fail.length) {
     errors = res.fail;
     outPush('\n\n\n');
     outputExtra();
   }
   
-  outPush('\n\n')
-  outPush(res.asserts.length + ' tests\n');
-  outPush(chalk.green(res.pass.length + ' passed\n'));
-  
-  
-  if (res.fail.length) {
+  if (!res.ok && assertCount === 0) {
+    outPush('\n  ' + chalk.red('Failed:') + ' No assertions found.\n\n');
+    process.exit(1);
+  }
+  else if (!res.ok && res.fail.length === 0) {
+    outPush('\n')
+    process.exit(1);
+  }
+  else if (res.fail.length || !res.ok) {
+    statsOutput();
+    
     outPush(chalk.red(res.fail.length + ' failed'));
     
     var past = (res.fail.length == 1) ? 'was' : 'were';
@@ -73,20 +85,31 @@ tap.on('results', function (res) {
     outPush('\n');
   }
   else{
+    statsOutput();
+    
     outPush('\n');
     outPush(chalk.green('Pass!') + '\n');
+  }
+  
+  function statsOutput () {
+    
+    outPush('\n\n')
+    outPush(res.asserts.length + ' tests\n');
+    outPush(chalk.green(res.pass.length + ' passed\n'));
   }
 });
 
 function outputExtra () {
+  
   console.log(extra.join('\n'));
 }
 
 process.stdin
   .pipe(dup)
   .pipe(process.stdout);
-  
+
 process.on('exit', function () {
+  
   if (errors.length) {
     process.exit(1);
   }
