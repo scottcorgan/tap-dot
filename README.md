@@ -1,4 +1,4 @@
-# tap-dot
+# tap-dot ![NPM version](https://img.shields.io/npm/v/tap-dot.svg?style=flat-square) ![NPM download count](https://img.shields.io/npm/dm/tap-dot.svg?style=flat-square)
 
 Formatted TAP output with dots ...
 
