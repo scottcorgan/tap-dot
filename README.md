@@ -18,7 +18,7 @@ npm install tap-dot --save-dev
  
 ## Usage
 
-**packge.json**
+**package.json**
 
 ```json
 {
