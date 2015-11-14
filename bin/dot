@@ -16,28 +16,28 @@ var lastComment;
 out.push('\n');
 
 function outPush (str) {
-  
+
   out.push('  ' + str);
 };
 
 tap.on('comment', function (comment) {
-  
+
   lastComment = comment;
 });
 
 var firstTestDone = false;
 
 tap.on('assert', function (res) {
-  
+
   var color = (res.ok) ? 'green' : 'red';
-  
+
   assertCount +=1;
-  
+
   if (res.ok) {
     (firstTestDone)
       ? out.push(chalk[color]('.'))
       : outPush(chalk[color]('.'));
-      
+
     firstTestDone = true;
   }
   if (!res.ok) {
@@ -46,18 +46,18 @@ tap.on('assert', function (res) {
 });
 
 tap.on('extra', function (str) {
-  
+
   if (str !== '') extra.push(str);
 });
 
 tap.on('results', function (res) {
-  
+
   if (res.fail.length) {
     errors = res.fail;
     outPush('\n\n\n');
     outputExtra();
   }
-  
+
   if (!res.ok && assertCount === 0) {
     outPush('\n  ' + chalk.red('Failed:') + ' No assertions found.\n\n');
     process.exit(1);
@@ -68,31 +68,31 @@ tap.on('results', function (res) {
   }
   else if (res.fail.length || !res.ok) {
     statsOutput();
-    
+
     outPush(chalk.red(res.fail.length + ' failed'));
-    
+
     var past = (res.fail.length == 1) ? 'was' : 'were';
     var plural = (res.fail.length == 1) ? 'failure' : 'failures';
-    
+
     outPush('\n\n');
     outPush(chalk.red('Failed Tests: '));
     outPush('There ' + past + ' ' + chalk.red(res.fail.length) + ' ' + plural + '\n\n');
-    
+
     res.fail.forEach(function (error) {
       outPush('  ' + chalk.red('x') + ' ' + error.name + '\n');
     });
-    
+
     outPush('\n');
   }
   else{
     statsOutput();
-    
+
     outPush('\n');
     outPush(chalk.green('Pass!') + '\n');
   }
-  
+
   function statsOutput () {
-    
+
     outPush('\n\n')
     outPush(res.asserts.length + ' tests\n');
     outPush(chalk.green(res.pass.length + ' passed\n'));
@@ -100,7 +100,7 @@ tap.on('results', function (res) {
 });
 
 function outputExtra () {
-  
+
   console.log(extra.join('\n'));
 }
 
@@ -109,7 +109,7 @@ process.stdin
   .pipe(process.stdout);
 
 process.on('exit', function () {
-  
+
   if (errors.length) {
     process.exit(1);
   }
