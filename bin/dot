@@ -52,7 +52,7 @@ tap.on('extra', function (str) {
 
 tap.on('output', function (res) {
 
-  if (res.fail && res.fail.length) {
+  if (res.fail && res.fail.length || assertCount === 0) {
     errors = res.fail;
     outPush('\n\n\n');
     outputExtra();
@@ -98,7 +98,7 @@ out.pipe(process.stdout);
 
 process.on('exit', function () {
 
-  if (errors.length) {
+  if (errors.length || assertCount === 0) {
     process.exit(1);
   }
 });
