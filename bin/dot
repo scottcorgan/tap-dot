@@ -53,8 +53,18 @@ tap.on('extra', function (str) {
 tap.on('output', function (res) {
 
   if (res.fail && res.fail.length || assertCount === 0) {
-    errors = res.fail;
     outPush('\n\n\n');
+
+    res.fail.forEach(function (failure) {
+        outPush(chalk.white('---') + '\n');
+
+        // Use the unwrapped out.push here as the raw error is already indented
+        out.push(chalk.white(failure.error.raw) + '\n');
+
+        outPush(chalk.white('...') + '\n');
+    });
+
+    errors = res.fail;
     outputExtra();
 
     statsOutput();
