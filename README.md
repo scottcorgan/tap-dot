@@ -9,13 +9,13 @@ Formatted TAP output with dots ...
 **Failed tests**
 
 ![Failed tests](https://i.cloudup.com/70SmvILs9I.png)
- 
+
 ## Install
- 
+
 ```
 npm install tap-dot --save-dev
 ```
- 
+
 ## Usage
 
 **package.json**
@@ -30,12 +30,12 @@ npm install tap-dot --save-dev
 ```
 
 Then run with `npm test`
- 
+
 **Terminal**
 
 ```
 tape test/index.js | node_modules/.bin/tap-dot
-``` 
+```
 
 **Testling**
 
@@ -44,3 +44,13 @@ npm install testling -g
 testling test/index.js | node_modules/.bin/tap-dot
 ```
 
+**API**
+
+```
+var dot = require('tap-dot');
+var tape = require('tape'); // Or another TAP reporter
+
+tape.createStream()
+  .pipe(dot())
+  .pipe(process.stdout);
+```

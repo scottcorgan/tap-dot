@@ -2,7 +2,7 @@
   "name": "tap-dot",
   "version": "1.0.5",
   "description": "Formatted TAP output with dots ...",
-  "main": "index.js",
+  "main": "./bin/dot-pipe.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,11 +23,13 @@
   },
   "homepage": "https://github.com/scottcorgan/tap-dot",
   "bin": {
-    "tap-dot": "bin/dot"
+    "tap-dot": "bin/dot.js"
   },
   "dependencies": {
-    "chalk": "^1.1.1",
-    "tap-out": "^1.3.2",
-    "through2": "^2.0.0"
+    "chalk": "^1.1.3",
+    "duplexer": "^0.1.1",
+    "tap-out": "^1.4.2",
+    "tap-parser": "^3.0.3",
+    "through2": "^2.0.1"
   }
 }
