@@ -61,6 +61,9 @@ tap.on('output', function (res) {
         // Use the unwrapped out.push here as the raw error is already indented
         out.push(chalk.white(failure.error.raw) + '\n');
 
+        var stackPadding = '           '
+        out.push(chalk.white(stackPadding + failure.error.stack.replace(/\n/g, '\n  ' + stackPadding)) + '\n');
+
         outPush(chalk.white('...') + '\n');
     });
 
