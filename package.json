@@ -26,8 +26,8 @@
     "tap-dot": "bin/dot"
   },
   "dependencies": {
-    "chalk": "^1.1.1",
     "tap-out": "^1.3.2",
-    "through2": "^2.0.0"
+    "through2": "^2.0.0",
+    "turbocolor": "^2.3.0"
   }
 }
