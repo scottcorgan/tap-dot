@@ -2,7 +2,7 @@
 
 var through = require('through2');
 var parser = require('tap-out');
-var chalk = require('chalk');
+var tc = require('turbocolor');
 var out = through();
 var tap = parser();
 var currentTestName = '';
@@ -35,13 +35,13 @@ tap.on('assert', function (res) {
 
   if (res.ok) {
     (firstTestDone)
-      ? out.push(chalk[color]('.'))
-      : outPush(chalk[color]('.'));
+      ? out.push(tc[color]('.'))
+      : outPush(tc[color]('.'));
 
     firstTestDone = true;
   }
   if (!res.ok) {
-    out.push(chalk[color]('x'));
+    out.push(tc[color]('x'));
   }
 });
 
@@ -56,15 +56,15 @@ tap.on('output', function (res) {
     outPush('\n\n\n');
 
     res.fail.forEach(function (failure) {
-        outPush(chalk.white('---') + '\n');
+        outPush(tc.white('---') + '\n');
 
         // Use the unwrapped out.push here as the raw error is already indented
-        out.push(chalk.white(failure.error.raw) + '\n');
+        out.push(tc.white(failure.error.raw) + '\n');
 
         var stackPadding = '           '
-        out.push(chalk.white(stackPadding + failure.error.stack.replace(/\n/g, '\n  ' + stackPadding)) + '\n');
+        out.push(tc.white(stackPadding + failure.error.stack.replace(/\n/g, '\n  ' + stackPadding)) + '\n');
 
-        outPush(chalk.white('...') + '\n');
+        outPush(tc.white('...') + '\n');
     });
 
     errors = res.fail;
@@ -72,17 +72,17 @@ tap.on('output', function (res) {
 
     statsOutput();
 
-    outPush(chalk.red(res.fail.length + ' failed'));
+    outPush(tc.red(res.fail.length + ' failed'));
 
     var past = (res.fail.length == 1) ? 'was' : 'were';
     var plural = (res.fail.length == 1) ? 'failure' : 'failures';
 
     outPush('\n\n');
-    outPush(chalk.red('Failed Tests: '));
-    outPush('There ' + past + ' ' + chalk.red(res.fail.length) + ' ' + plural + '\n\n');
+    outPush(tc.red('Failed Tests: '));
+    outPush('There ' + past + ' ' + tc.red(res.fail.length) + ' ' + plural + '\n\n');
 
     res.fail.forEach(function (error) {
-      outPush('  ' + chalk.red('x') + ' ' + error.name + '\n');
+      outPush('  ' + tc.red('x') + ' ' + error.name + '\n');
     });
 
     outPush('\n');
@@ -91,14 +91,14 @@ tap.on('output', function (res) {
     statsOutput();
 
     outPush('\n');
-    outPush(chalk.green('Pass!') + '\n');
+    outPush(tc.green('Pass!') + '\n');
   }
 
   function statsOutput () {
 
     outPush('\n\n')
     outPush(res.tests.length + ' tests\n');
-    outPush(chalk.green(res.pass.length + ' passed\n'));
+    outPush(tc.green(res.pass.length + ' passed\n'));
   }
 });
 
