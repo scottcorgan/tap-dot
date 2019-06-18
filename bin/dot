@@ -56,15 +56,17 @@ tap.on('output', function (res) {
     outPush('\n\n\n');
 
     res.fail.forEach(function (failure) {
-        outPush(chalk.white('---') + '\n');
+        if (failure.error.raw) {
+            outPush(chalk.white('---') + '\n');
 
-        // Use the unwrapped out.push here as the raw error is already indented
-        out.push(chalk.white(failure.error.raw) + '\n');
+            // Use the unwrapped out.push here as the raw error is already indented
+            out.push(chalk.white(failure.error.raw) + '\n');
 
-        var stackPadding = '           '
-        out.push(chalk.white(stackPadding + failure.error.stack.replace(/\n/g, '\n  ' + stackPadding)) + '\n');
+            var stackPadding = '           '
+            if (failure.error.stack) out.push(chalk.white(stackPadding + failure.error.stack.replace(/\n/g, '\n  ' + stackPadding)) + '\n');
 
-        outPush(chalk.white('...') + '\n');
+            outPush(chalk.white('...') + '\n');
+        }
     });
 
     errors = res.fail;
